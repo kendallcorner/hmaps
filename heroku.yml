@@ -1,0 +1,19 @@
+setup:
+  addons:
+    - plan: heroku-postgresql
+      as: DATABASE
+build:
+  docker:
+    web: nginx/Dockerfile
+    api: backend/Dockerfile
+    frontend: frontend/Dockerfile
+  config:
+    NODE_ENV: production
+    PYTHONPATH: .
+release:
+  command:
+    - ./deployment-tasks.sh
+  image: worker
+run:
+  web: /docker-entrypoint.sh nginx -g daemon off;
+  api: python app/main.py
